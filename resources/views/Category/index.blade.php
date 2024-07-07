@@ -3,10 +3,15 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
+                @session('status')
+                <div class="alert alert-success">
+                    {{ session('status') }}
+                </div>
+                @endsession
                 <div class="card">
                     <div class="card-header">
                         <h4>Categories list
-                            <a href="{{ url('category/create') }}" class="btn btn-primary float-end">Add Category</a>
+                            <a href="{{ Route('category.create') }}" class="btn btn-primary float-end">Add Category</a>
                         </h4>
                     </div>
                     <div class="card-body">
@@ -21,15 +26,26 @@
                             </tr>
                             </thead>
                             <tbody>
+                            @foreach($categories as $category)
                                 <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>{{ $category->id }}</td>
+                                    <td>{{ $category->name }}</td>
+                                    <td>{{ $category->description }}</td>
+                                    <td>{{ $category->status == 1 ? 'Visiable' : 'Hidden' }}</td>
+                                    <td>
+                                        <a href="{{ Route('category.edit', $category->id) }}" class="btn btn-success">Edit</a>
+                                        <a href="{{ Route('category.show', $category->id) }}" class="btn btn-info">Show</a>
+                                        <form action="{{ Route('category.destroy', $category->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    </td>
                                 </tr>
+                            @endforeach
                             </tbody>
                         </table>
+                        {{ $categories->links() }}
                     </div>
                 </div>
             </div>
